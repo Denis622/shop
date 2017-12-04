@@ -1,8 +1,3 @@
-if (!process.env.BASE_URL) {
-    console.error(`Please run command as "BASE_URL=http://<domain> npm test"`)
-    process.exit(1)
-}
-
 exports.config = {
     
     //
@@ -85,7 +80,7 @@ exports.config = {
     baseUrl: 'process.env.BASE_URL',
     //
     // Default timeout for all waitFor* commands.
-    waitforTimeout: 10000,
+    waitforTimeout: 20000,
     //
     // Default timeout in milliseconds for request
     // if Selenium Grid doesn't send response
@@ -135,7 +130,12 @@ exports.config = {
     // Options to be passed to Mocha.
     // See the full list at http://mochajs.org/
     mochaOpts: {
-        ui: 'bdd'
+        timeout: 900000,
+        ui: 'bdd',
+        compilers: [
+            'ts-node/register',
+            'tsconfig-paths/register',
+        ]
     },
     //
     // =====
@@ -168,7 +168,7 @@ exports.config = {
      * @param {Array.<String>} specs List of spec file paths that are to be run
      */
     before: function (capabilities, specs) {
-        browser.windowHandleSize({width: 1920, height: 1080})
+        browser.windowHandleFullscreen();
     },
     /**
      * Runs before a WebdriverIO command gets executed.
@@ -249,11 +249,4 @@ exports.config = {
      */
     // onComplete: function(exitCode, config, capabilities) {
     // }
-}
-
-if (process.env.SELENIUM_HOST) {
-    console.log("SELENIUM_HOST passed")
-    delete exports.config.services
-    exports.config.host = process.env.SELENIUM_HOST
-    exports.config.port = process.env.SELENIUM_PORT
-}
+};
