@@ -1,3 +1,8 @@
+if (!process.env.BASE_URL) {
+    console.error(`Please run command as "BASE_URL=http://<domain> npm test"`)
+    process.exit(1)
+}
+
 exports.config = {
     
     //
@@ -77,7 +82,8 @@ exports.config = {
     // with `/`, the base url gets prepended, not including the path portion of your baseUrl.
     // If your `url` parameter starts without a scheme or `/` (like `some/path`), the base url
     // gets prepended directly.
-    baseUrl: 'process.env.BASE_URL',
+    baseUrl: process.env.BASE_URL,
+
     //
     // Default timeout for all waitFor* commands.
     waitforTimeout: 20000,
@@ -250,3 +256,10 @@ exports.config = {
     // onComplete: function(exitCode, config, capabilities) {
     // }
 };
+
+if (process.env.SELENIUM_HOST) {
+    console.log("SELENIUM_HOST passed")
+    delete exports.config.services
+    exports.config.host = process.env.SELENIUM_HOST
+    exports.config.port = process.env.SELENIUM_PORT
+}
